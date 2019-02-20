@@ -1,0 +1,16 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }}</title>
+        {% else %}
+        <title>NameApp</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>
+            <a href="{{ url_for('index') }}"><img src="data:image/png;base64,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"
+                alt="logo me", height="10%"></a>
+        </div>
+        {% block content %}{% endblock %}
+    </body>
+</html>
