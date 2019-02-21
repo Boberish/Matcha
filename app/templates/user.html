@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <table>
+        <tr valign="top">
+            <img src="/static/sunshine.jpeg" alt="Beer" style="width:30%">
+            <img src="{{ url_for('static', filename='sunshine.jpeg') }}" alt="Beer" style="width:30%">
+
+
+            <td>
+                <h1>{{ user.username }}</h1>
+                
+                {% if user.bio %}<p>About me :</p><p>{{ user.bio }}</p>{% endif %}
+                {% if user.age %}<p>My age : {{ user.age }}</p>{% endif %}
+                {% if user.sexpref %}<p>My sexe preference : {{ user.sexpref }}</p>{% endif %}
+                {% if user.fame %}<p>{{ user.fame }}</p>{% endif %}
+
+                {% if user == current_user %}
+                    <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+                {% endif %}
+    <hr>
+                
+                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    
+{% endblock %}

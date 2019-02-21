@@ -2,6 +2,8 @@ from app import db, login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask import url_for
+from flask_login import current_user
 
 
 class User(UserMixin, db.Model):
@@ -21,6 +23,13 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+    def profile_pic(self):
+        # path = url_for(['UPLOAD_FOLDER'] + current_user.username + 'profile_pic.jpeg')
+        # print(path)
+        # return path
+        return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+        # return 'app/images/profile_empty.jpeg'
 
     def __repr__(self):
         return '<User {} {} {}>'.format(self.username, self.firstname, self.email)
