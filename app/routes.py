@@ -1,12 +1,14 @@
 from app import app, db
 from flask import send_from_directory, render_template, url_for, flash, redirect, request
-from app.forms import LoginForm, RegistrationForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
+from app.email import send_password_reset_email
 from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+
 
 @app.before_request
 def before_request():
@@ -60,8 +62,12 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-    path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+        fullfilename = ''
+        path_pic = ''
+    else :
+        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
+        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
     return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -120,8 +126,12 @@ def upload():
                 return redirect(url_for('user', username=current_user.username))
 
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-    path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+        fullfilename = ''
+        path_pic = ''
+    else :
+        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
+        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
     return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
     # return render_template('upload.html', title='Upload', form=form)
 
@@ -130,3 +140,36 @@ def uploaded_file(filename):
     flash('Your Picture has been uploaded successfully')
     return redirect(url_for('user', username=current_user.username))
     # return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html', title='Reset Password', form=form)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)
+
+
+
+
+

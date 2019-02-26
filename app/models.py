@@ -4,6 +4,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from flask import url_for
 from flask_login import current_user
+from time import time
+import jwt
+from app import app
 
 likes = db.Table('likes',db.Column('likes_id', db.Integer, db.ForeignKey('user.id')), 
     db.Column('liked_id', db.Integer, db.ForeignKey('user.id')) )
@@ -52,6 +55,20 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {} {} {}>'.format(self.username, self.firstname, self.email)
+    
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
 
 
 
