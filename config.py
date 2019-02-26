@@ -14,4 +14,5 @@ class Config(object):
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['matcha42webadm@gmail.com']
     UPLOAD_FOLDER = basedir + '/app/static/images/'
+    PATH_IMAGE = '/static/images/'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])

@@ -60,8 +60,9 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    fullfilename = os.path.join(app.config['UPLOAD_FOLDER'], 'sunshine.jpeg')
-    return render_template('user.html', user=user, user_image = fullfilename)
+    fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
+    path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -109,11 +110,19 @@ def upload():
 
             if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
                 os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
+            if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
+            # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username) if os.path.isfile(name)]) <= 5):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
+                return redirect(url_for('uploaded_file', filename=filename))
+            else:
+                flash('You can only have 5 pictures, please delete one of your other picture')
+                return redirect(url_for('user', username=current_user.username))
 
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
-            return redirect(url_for('uploaded_file', filename=filename))
-    return render_template('upload.html', title='Upload')
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
+    path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
     # return render_template('upload.html', title='Upload', form=form)
 
 @app.route('/uploads/<filename>')
