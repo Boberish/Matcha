@@ -16,3 +16,6 @@ class Config(object):
     UPLOAD_FOLDER = basedir + '/app/static/images/'
     PATH_IMAGE = '/static/images/'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+
+
+# psw=Philou1234
