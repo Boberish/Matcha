@@ -68,6 +68,7 @@ def user(username):
     else :
         fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
         path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+
     return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
