@@ -26,3 +26,7 @@ FileNotFoundError: [Errno 2] No such file or directory: '/app/images/cartedesejo
 2019-02-26 12:50:47,249 INFO: Matcha startup [in /Users/philou/Documents/Code/42/matcha/app/__init__.py:43]
 2019-02-26 13:26:59,644 INFO: Matcha startup [in /Users/philou/Documents/Code/42/matcha/app/__init__.py:43]
 2019-02-26 14:46:39,208 INFO: Matcha startup [in /home/keaton/Matcha/app/__init__.py:43]
+2019-02-26 15:59:12,489 INFO: Matcha startup [in /home/keaton/Matcha/app/__init__.py:43]
+2019-02-26 15:59:21,259 INFO: Matcha startup [in /home/keaton/Matcha/app/__init__.py:43]
+2019-02-26 16:00:14,613 INFO: Matcha startup [in /home/keaton/Matcha/app/__init__.py:43]
+2019-02-26 16:19:46,983 INFO: Matcha startup [in /home/keaton/Matcha/app/__init__.py:43]

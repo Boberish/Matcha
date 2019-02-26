@@ -5,6 +5,8 @@ from flask_login import UserMixin
 from flask import url_for
 from flask_login import current_user
 
+likes = db.Table('likes',db.Column('likes_id', db.Integer, db.ForeignKey('user.id')), 
+    db.Column('liked_id', db.Integer, db.ForeignKey('user.id')) )
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,12 +19,29 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    liked = db.relationship(
+        'User', secondary=likes,
+        primaryjoin=(likes.c.likes_id == id),
+        secondaryjoin=(likes.c.liked_id == id),
+        backref=db.backref('likes', lazy='dynamic'),lazy='dynamic'
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def add_like(self, user):
+        if not self.does_like(user):
+            self.liked.append(user)
+    
+    def del_like(self, user):
+        if self.does_like(user):
+            self.liked.remove(user)
+            
+    def does_like(self, user):
+        return self.liked.filter(likes.c.liked_id == user.id).count() > 0
     
     def profile_pic(self):
         # path = url_for(['UPLOAD_FOLDER'] + current_user.username + 'profile_pic.jpeg')
@@ -33,6 +52,9 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {} {} {}>'.format(self.username, self.firstname, self.email)
+
+
+
 
 @login.user_loader
 def load_user(id):
