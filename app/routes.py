@@ -62,12 +62,12 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+    if not os.path.exists(app.config['UPLOAD_FOLDER'] + username):
         fullfilename = ''
         path_pic = ''
     else :
-        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + username))
+        path_pic = os.path.join(app.config['PATH_IMAGE'] + username)
     return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
