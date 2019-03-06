@@ -62,13 +62,11 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    if not os.path.exists(app.config['UPLOAD_FOLDER'] + username):
+    if not user.path_pic:
         fullfilename = ''
-        path_pic = ''
     else :
         fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + username))
-        path_pic = os.path.join(app.config['PATH_IMAGE'] + username)
-    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic)
+    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = user.path_pic)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -113,11 +111,14 @@ def upload():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-
-            if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+            # begening changes
+            # print("here is path_pic before the function: {}".format(current_user.path_pic))
+            if not current_user.path_pic:
                 os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
+                current_user.path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+                db.session.commit()
+
             if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
-            # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username) if os.path.isfile(name)]) <= 5):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
                 return redirect(url_for('uploaded_file', filename=filename))
@@ -125,15 +126,35 @@ def upload():
                 flash('You can only have 5 pictures, please delete one of your other picture')
                 return redirect(url_for('user', username=current_user.username))
 
+            # # before changes
+            # if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+            #     os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
+            # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
+            # # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username) if os.path.isfile(name)]) <= 5):
+            #     filename = secure_filename(file.filename)
+            #     file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
+            #     return redirect(url_for('uploaded_file', filename=filename))
+            # else:
+            #     flash('You can only have 5 pictures, please delete one of your other picture')
+            #     return redirect(url_for('user', username=current_user.username))
+
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+    # changes 2
+    if not current_user.path_pic:
         fullfilename = ''
-        path_pic = ''
     else :
         fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
-    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
-    # return render_template('upload.html', title='Upload', form=form)
+    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = current_user.path_pic)
+
+    # # beforechanges 2
+    # if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
+    #     fullfilename = ''
+    #     path_pic = ''
+    # else :
+    #     fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
+    #     path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    # return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
+    # # return render_template('upload.html', title='Upload', form=form)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -168,3 +189,14 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+@app.route('/explore/')
+@login_required
+def explore():
+    # A changer pour le mettre dynamiquement: all the user the current_user doen't like and didn't block
+    profile_list = [User.query.get(1)]
+    profile_list.append(User.query.get(6))
+    # fin du changement
+
+    print(profile_list)
+    return render_template('explore.html', title='Explore', profile_list=profile_list)

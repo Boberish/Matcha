@@ -12,8 +12,12 @@
                 <img src="{{ path_pic + '/' + image }}" alt="Beer" style="width:10%">
             {% endfor %}
 
+
             <td>
                 <h1>{{ user.username }}</h1>
+                {% if user.last_seen %}
+                    <p>Last seen on: {{ moment(user.last_seen).format('LLLL') }}</p>
+                {% endif %}
                 <h3>{% if user.firstname %}<p>{{ user.firstname }}</p>{% endif %}</h3>
                 
                 {% if user.bio %}<p>About me :</p><p>{{ user.bio }}</p>{% endif %}

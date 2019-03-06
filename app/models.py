@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    path_pic = db.Column(db.String(120), index=True, default=None)
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
@@ -53,8 +54,12 @@ class User(UserMixin, db.Model):
         return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
         # return 'app/images/profile_empty.jpeg'
 
+    def your_likes(self):
+        return User.query.join(likes, (likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id).all()
+
+
     def __repr__(self):
-        return '<User {} {} {}>'.format(self.username, self.firstname, self.email)
+        return '<User username:{}, firstname:{}, email:{}, path_pic:{}>'.format(self.username, self.firstname, self.email, self.path_pic)
     
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(

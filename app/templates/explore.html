@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Welcome on the Explore page !</h1>
+    <h2>Find your love Here 👇</h2>
+    <hr>
+
+
+    <p>{{ profile_list }}</p>
+
+    {% for profile in profile_list %}
+        {% include '_sumup.html' %}
+    {% endfor %}
+
+    <hr>
+{% endblock %}
