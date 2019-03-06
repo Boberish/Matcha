@@ -47,9 +47,9 @@ class User(UserMixin, db.Model):
     def does_like(self, user):
         return self.liked.filter(likes.c.liked_id == user.id).count() > 0
 
-    def your_likes(self):
-        # return User.query.join(likes,(likes.c.likes_id == self.id)).filter(likes.c.likes_id == self.id)
-        return User.query.join(likes,(likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id)
+    # def your_likes(self):
+    #     # return User.query.join(likes,(likes.c.likes_id == self.id)).filter(likes.c.likes_id == self.id)
+    #     return User.query.join(likes,(likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id)
         
         #return User.query.join(likes,(likes.c.likes_id == User.id))#.filter(likes.c.liked_id == self.id) 
 
