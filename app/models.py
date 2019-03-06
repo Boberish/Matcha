@@ -55,7 +55,7 @@ class User(UserMixin, db.Model):
         #return User.query.join(likes,(likes.c.likes_id == User.id))#.filter(likes.c.liked_id == self.id) 
 
     def likes_you(self):
-        return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id)
+        return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id).all()
 
     def profile_pic(self):
         path = os.path.join(os.getenv('PATH_IMAGE', 'app/static/images') , self.username, 'profile_pic/')

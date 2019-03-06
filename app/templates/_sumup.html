@@ -2,6 +2,13 @@
 
 {#<img src="{{ path_pic + '/' + image }}" alt="Beer" style="width:10%">#}
 <p>{{profile.username}}</p>
-<p>{{profile.age}}</p>
-<p>{{profile.path_pic}}</p>
-<!-- <img src="{{ profile.path_pic + '**' }}" alt="Profile Picture" style="width:10%"> -->
+
+{% if profile.sexpref %} <p>Sexe Preference : {{profile.sexpref}}</p>{% endif %}
+{% if profile.age %} <p>Age : {{profile.age}}</p>{% endif %}
+{% if profile.path_pic %} <p>{{profile.path_pic}}</p>{% endif %}
+{% if profile.bio %} <p>About me: {{profile.bio}}</p>{% endif %}
+
+{# <img src="{{ profile.path_pic + '**' }}" alt="Profile Picture" style="width:10%"> #} 
+
+<hr>
+<br>

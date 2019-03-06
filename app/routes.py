@@ -194,12 +194,27 @@ def reset_password(token):
 @login_required
 def explore():
     # A changer pour le mettre dynamiquement: all the user the current_user doen't like and didn't block
-    profile_list = [User.query.get(1)]
-    profile_list.append(User.query.get(6))
+    profile_list = User.query.all()
+    print(profile_list)
     # fin du changement
 
-    print(profile_list)
     return render_template('explore.html', title='Explore', profile_list=profile_list)
+
+@app.route('/likes/')
+@login_required
+def likes_page():
+    profiles_you_like = current_user.your_likes()
+    profiles_who_liked_you = current_user.likes_you()
+    # print("====>  ***profiles_who_liked_you {}".format(profiles_who_liked_you))
+    return render_template('likes_page.html', title='Your Likes', profiles_you_like=profiles_you_like, profiles_who_liked_you=profiles_who_liked_you)
+
+@app.route('/matches/')
+@login_required
+def matches_page():
+    # to change for the function who doesn't exist yet
+    profiles_matches = current_user.your_likes()
+   
+    return render_template('matches_page.html', title='Matches', profiles_matches=profiles_matches)
 
 @app.route('/like/<username>')
 @login_required

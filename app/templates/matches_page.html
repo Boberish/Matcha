@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Matches !</h1>
+    <h2>Start Here the love story 🚀</h2>
+    <hr>
+
+
+    <p>{{ profiles_you_like }}</p>
+
+    {% for profile in profiles_you_like %}
+        {% include '_sumup.html' %}
+    {% endfor %}
+
+    <hr>
+
+{% endblock %}
