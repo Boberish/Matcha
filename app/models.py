@@ -7,6 +7,7 @@ from flask_login import current_user
 from time import time
 import jwt
 from app import app
+import os
 
 likes = db.Table('likes',db.Column('likes_id', db.Integer, db.ForeignKey('user.id')), 
     db.Column('liked_id', db.Integer, db.ForeignKey('user.id')) )
@@ -57,10 +58,11 @@ class User(UserMixin, db.Model):
         return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id)
 
     def profile_pic(self):
-        # path = url_for(['UPLOAD_FOLDER'] + current_user.username + 'profile_pic.jpeg')
-        # print(path)
-        # return path
-        return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
+        path = os.path.join(os.getenv('PATH_IMAGE', 'app/static/images') , self.username, 'profile_pic/')
+        pic = os.listdir(path)
+    
+        return(path + pic[0])
+        # return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
         # return 'app/images/profile_empty.jpeg'
     
     def get_liked(self):
