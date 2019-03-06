@@ -54,7 +54,7 @@ class User(UserMixin, db.Model):
         #return User.query.join(likes,(likes.c.likes_id == User.id))#.filter(likes.c.liked_id == self.id) 
 
     def likes_you(self):
-        return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id)
+        return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id).all()
 
     def profile_pic(self):
         # path = url_for(['UPLOAD_FOLDER'] + current_user.username + 'profile_pic.jpeg')

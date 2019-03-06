@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Welcome on the Your likes !</h1>
+    <h2>These are your crush ❤️ 👇</h2>
+    <hr>
+
+
+    <p>{{ profiles_you_like }}</p>
+
+    {% for profile in profiles_you_like %}
+        {% include '_sumup.html' %}
+    {% endfor %}
+
+    <hr>
+    <h2>Here The people who likes YOOUU ❤️ 👇 Premium feature</h2>
+    <p>{{ profiles_who_liked_you }}</p>
+
+    {% for profile in profiles_who_liked_you %}
+        {% include '_sumup.html' %}
+    {% endfor %}
+
+{% endblock %}
