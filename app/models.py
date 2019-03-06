@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    path_pic = db.Column(db.String(120), index=True, default=None)
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
@@ -45,16 +46,32 @@ class User(UserMixin, db.Model):
             
     def does_like(self, user):
         return self.liked.filter(likes.c.liked_id == user.id).count() > 0
-    
+
+    def your_likes(self):
+        # return User.query.join(likes,(likes.c.likes_id == self.id)).filter(likes.c.likes_id == self.id)
+        return User.query.join(likes,(likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id)
+        
+        #return User.query.join(likes,(likes.c.likes_id == User.id))#.filter(likes.c.liked_id == self.id) 
+
+    def likes_you(self):
+        return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id)
+
     def profile_pic(self):
         # path = url_for(['UPLOAD_FOLDER'] + current_user.username + 'profile_pic.jpeg')
         # print(path)
         # return path
         return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
         # return 'app/images/profile_empty.jpeg'
+    
+    def get_liked(self):
+        print( '<User likes {}>'.format(self.liked.all()))
+
+    def your_likes(self):
+        return User.query.join(likes, (likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id).all()
+
 
     def __repr__(self):
-        return '<User {} {} {}>'.format(self.username, self.firstname, self.email)
+        return '<User username:{}, firstname:{}, email:{}, path_pic:{}>'.format(self.username, self.firstname, self.email, self.path_pic)
     
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
@@ -76,3 +93,4 @@ class User(UserMixin, db.Model):
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
