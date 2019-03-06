@@ -62,11 +62,22 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
+
     if not user.path_pic:
         fullfilename = ''
     else :
         fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + username))
-    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = user.path_pic)
+        for file in fullfilename:
+            if file == 'profile_pic':
+                fullfilename.remove(file)
+
+    profile_pic = user.profile_pic()
+    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = user.path_pic, profile_pic=profile_pic)
+
+
+
+
+
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -213,7 +224,6 @@ def likes_page():
 def matches_page():
     # to change for the function who doesn't exist yet
     profiles_matches = current_user.your_likes()
-   
     return render_template('matches_page.html', title='Matches', profiles_matches=profiles_matches)
 
 @app.route('/like/<username>')

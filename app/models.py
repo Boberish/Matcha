@@ -58,12 +58,11 @@ class User(UserMixin, db.Model):
         return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id).all()
 
     def profile_pic(self):
-        path = os.path.join(os.getenv('PATH_IMAGE', 'app/static/images') , self.username, 'profile_pic/')
-        pic = os.listdir(path)
-    
+        path = os.path.join(os.getenv('PATH_IMAGE', '/static/images') , self.username, 'profile_pic/')
+        pic = os.listdir('app' + path)
+        
+        print(path + pic[0])
         return(path + pic[0])
-        # return 'https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80'
-        # return 'app/images/profile_empty.jpeg'
     
     def get_liked(self):
         print( '<User likes {}>'.format(self.liked.all()))

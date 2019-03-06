@@ -7,11 +7,13 @@
             <!-- <img src="/static/sunshine.jpeg" alt="Beer" style="width:30%">
             <img src="{{ url_for('static', filename='sunshine.jpeg') }}" alt="Beer" style="width:30%"> -->
 
+            <img src={{profile_pic}} alt="Beer" style="width:10%">
+            <br>
+
             {% for image in user_image: %}
 
                 <img src="{{ path_pic + '/' + image }}" alt="Beer" style="width:10%">
             {% endfor %}
-
 
             <td>
                 <h1>{{ user.username }}</h1>
