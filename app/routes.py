@@ -168,3 +168,33 @@ def reset_password(token):
         flash('Your password has been reset.')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)
+
+@app.route('/like/<username>')
+@login_required
+def like(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('User {} not found.'.format(username))
+        return redirect(url_for('index'))
+    if user == current_user:
+        flash('You cannot like yourself!')
+        return redirect(url_for('user', username=username))
+    current_user.add_like(user)
+    db.session.commit()
+    flash('You now like {}!'.format(username))
+    return redirect(url_for('user', username=username))
+
+@app.route('/unlike/<username>')
+@login_required
+def unlike(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        flash('User {} not found.'.format(username))
+        return redirect(url_for('index'))
+    if user == current_user:
+        flash('You cannot unfollow yourself!')
+        return redirect(url_for('user', username=username))
+    current_user.del_like(user)
+    db.session.commit()
+    flash('You unliked {}.'.format(username))
+    return redirect(url_for('user', username=username))
