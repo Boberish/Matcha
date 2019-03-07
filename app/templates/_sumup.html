@@ -3,7 +3,10 @@
 {#<img src="{{ path_pic + '/' + image }}" alt="Beer" style="width:10%">#}
 {#<img src="{{ profile.profile_pic }}" alt="Beer" style="width:10%">#}
 
-{% if  profile.profile_pic()%}<img src={{profile.profile_pic()}} alt="Profile Picture" style="width:20%">{% endif %}
+{% if  profile.profile_pic()%}
+<a href="{{ url_for('user', username=profile.username) }}"><img src="{{ profile.profile_pic() }}" alt="User picture" style="width:10%"></a>
+{% endif %}
+
 <p>{{profile.username}}</p>
 {% if profile.sexpref %} <p>Sexe Preference : {{profile.sexpref}}</p>{% endif %}
 {% if profile.age %} <p>Age : {{profile.age}}</p>{% endif %}

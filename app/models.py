@@ -72,8 +72,8 @@ class User(UserMixin, db.Model):
     def get_img_paths(self):
         image_name_list = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + self.username))
         path = os.path.join(app.config['PATH_IMAGE'] , self.username)
-        final = [path + '/' + img for img in image_name_list]
-        print(final)
+        final = [path + '/' + img for img in image_name_list if img != 'profile_pic']
+        return(final)
 
     # path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
 

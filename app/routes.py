@@ -114,7 +114,8 @@ def upload():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        path = app.config['UPLOAD_FOLDER'] + '/profile_pic/' + current_user.username
+        path = app.config['UPLOAD_FOLDER'] + current_user.username + '/profile_pic/'
+
         if file and allowed_file(file.filename):
             if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
                 filename = secure_filename(file.filename)
@@ -128,8 +129,8 @@ def upload():
                 return redirect(url_for('user', username=current_user.username))
 
     user = User.query.filter_by(username=current_user.username).first_or_404()
-
-    return render_template('upload.html', title='Upload', user=user)
+    user_image = current_user.get_img_paths()
+    return render_template('upload.html', title='Upload', user=user, user_image=user_image)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -224,7 +225,7 @@ def unlike(username):
 def swap_prof_pic():
     picture = request.args.get('type')
     os.rename(os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, picture), os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, 'profile_pic', picture))
-    # print("picture:  {}".format(picture))
+    print("picture:  {}".format(picture))
     flash('Your Profile picture has been updated')
     return redirect(url_for('user', username=current_user.username))
 
