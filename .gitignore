@@ -1,13 +1,15 @@
 /__pycache__
+__pycache__/
 /logs
 /**__pycache__*
 **__pycache__**
 /**__pycache__**
+/**__pycache__**
 /**__pycache__**/
 # Byte-compiled / optimized / DLL files
-__pycache__/
+/__pycache__/
 *.py[cod]
-
+*log*
 # C extensions
 *.so
 

@@ -48,20 +48,14 @@ class User(UserMixin, db.Model):
     def does_like(self, user):
         return self.liked.filter(likes.c.liked_id == user.id).count() > 0
 
-    # def your_likes(self):
-    #     # return User.query.join(likes,(likes.c.likes_id == self.id)).filter(likes.c.likes_id == self.id)
-    #     return User.query.join(likes,(likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id)
-        
-        #return User.query.join(likes,(likes.c.likes_id == User.id))#.filter(likes.c.liked_id == self.id) 
-
     def likes_you(self):
         return User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id).all()
 
     def profile_pic(self):
         path = os.path.join(os.getenv('PATH_IMAGE', '/static/images') , self.username, 'profile_pic/')
         pic = os.listdir('app' + path)
-        
-        print(path + pic[0])
+        if not pic:
+            return(os.path.join(os.getenv('PATH_IMAGE', '/static/images/'),'default_prof_pic', 'profile_empty.jpeg'))
         return(path + pic[0])
     
     def get_liked(self):
@@ -70,6 +64,11 @@ class User(UserMixin, db.Model):
     def your_likes(self):
         return User.query.join(likes, (likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id).all()
 
+    def init_profile_pic(self):
+        try:
+            os.makedirs('app/static/images/' + self.username + '/profile_pic/')
+        except:
+            pass
 
     def __repr__(self):
         return '<User username:{}, firstname:{}, email:{}, path_pic:{}>'.format(self.username, self.firstname, self.email, self.path_pic)
