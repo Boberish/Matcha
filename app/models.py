@@ -63,6 +63,17 @@ class User(UserMixin, db.Model):
     def your_likes(self):
         return User.query.join(likes, (likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id).all()
 
+    def your_matches(self):
+        yl = User.query.join(likes, (likes.c.liked_id == User.id)).filter(likes.c.likes_id == self.id).all()
+        lm = User.query.join(likes,(likes.c.likes_id == User.id)).filter(likes.c.liked_id == self.id).all()
+        matches = []
+
+        for l in yl:
+            if l in lm:
+                matches.append(l)
+
+        return matches
+
     def init_profile_pic(self):
         try:
             os.makedirs('app/static/images/' + self.username + '/profile_pic/')

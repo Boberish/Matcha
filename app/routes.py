@@ -224,8 +224,16 @@ def unlike(username):
 @app.route('/swap_prof_pic/')
 def swap_prof_pic():
     picture = request.args.get('type')
-    os.rename(os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, picture), os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, 'profile_pic', picture))
+    print(os.getcwd())
     print("picture:  {}".format(picture))
+
+    picture = picture.rsplit('/',1)
+    print("AFTERKDKDKDKK----------------{}".format(picture))
+    oldProPic = os.listdir('app/' + picture[0]  + '/profile_pic/')
+    os.rename('app/' + picture[0]  + '/profile_pic/' + oldProPic[0], 'app/' + picture[0] + '/' + oldProPic[0])
+    os.rename('app/' + picture[0] + '/' + picture[1], 'app/' + picture[0]  + '/profile_pic/' + picture[1])
+    
     flash('Your Profile picture has been updated')
     return redirect(url_for('user', username=current_user.username))
 
+ 
