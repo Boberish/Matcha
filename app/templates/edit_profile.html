@@ -3,6 +3,14 @@
 
 {% block app_content %}
     <h1>Edit Your Profile</h1>
+    <img src={{current_user.profile_pic()}} alt="Profile Picture" style="width:10%">
+    <p>To change your profile picture Click onthe one you like !</p>
+    {% for image in user_image: %}
+        <a href="{{ url_for('swap_prof_pic', type=image) }}"><img src="{{ image }}" alt="User picture" style="width:5%"></a>
+    {% endfor %}
+    <p><a href="{{ url_for('upload') }}">Add more picture ? 📸 </a></p>
+
+
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}

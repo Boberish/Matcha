@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -9,6 +9,7 @@ import os
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
+from flask_simple_geoip import SimpleGeoIP
 
 
 app = Flask(__name__)
@@ -20,6 +21,7 @@ login.login_view = 'login'
 bootstrap = Bootstrap(app)
 mail = Mail(app)
 moment = Moment(app)
+simple_geoip = SimpleGeoIP(app)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:

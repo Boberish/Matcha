@@ -16,6 +16,7 @@ class Config(object):
     UPLOAD_FOLDER = basedir + '/app/static/images/'
     PATH_IMAGE = '/static/images/'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+    GEOIPIFY_API_KEY = "at_Lql3BVDrqYTBjrtl0eEjFhIhLw8aW"
 
 
 # psw=Philou1234
