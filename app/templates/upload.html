@@ -4,8 +4,17 @@
 
 
 <form method=post enctype=multipart/form-data>
+{% if  current_user.profile_pic()%}
+<p>Profile Picture: </p>
+<img src={{current_user.profile_pic()}} alt="Profile Picture" style="width:20%">
+<br>
+<br>
+{% endif %}
+
+    <p>Your other pictures (click on one to change it to your profile picture)</p>
     {% for image in user_image: %}
-        <img src="{{ path_pic + '/' + image }}" alt="Profile picture" style="width:5%">
+    <a href="{{ url_for('swap_prof_pic', type=path_pic + '/' + image) }}"><img src="{{ path_pic + '/' + image }}" alt="User picture" style="width:5%">
+
     {% endfor %}
     <br>
     <hr>

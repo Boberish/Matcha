@@ -225,3 +225,11 @@ def unlike(username):
     db.session.commit()
     flash('You unliked {}.'.format(username))
     return redirect(url_for('user', username=username))
+
+@app.route('/swap_prof_pic/')
+def swap_prof_pic():
+    picture = request.args.get('type')
+    print("picture:  {}".format(picture))
+    flash('Your Profile picture has been updated')
+    return redirect(url_for('user', username=current_user.username))
+
