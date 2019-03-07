@@ -114,28 +114,22 @@ def upload():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
+        path = app.config['UPLOAD_FOLDER'] + '/profile_pic/' + current_user.username
         if file and allowed_file(file.filename):
-            if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
-                os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
             if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
+                if not os.listdir(path):
+                    file.save(os.path.join(path, filename))
+                else:
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
                 return redirect(url_for('uploaded_file', filename=filename))
             else:
                 flash('You can only have 5 pictures, please delete one of your other picture')
                 return redirect(url_for('user', username=current_user.username))
 
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
-        fullfilename = ''
-        path_pic = ''
-    else :
-        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-        for file in fullfilename:
-            if file == 'profile_pic':
-                fullfilename.remove(file)
-        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
-    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
+
+    return render_template('upload.html', title='Upload', user=user)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -229,7 +223,8 @@ def unlike(username):
 @app.route('/swap_prof_pic/')
 def swap_prof_pic():
     picture = request.args.get('type')
-    print("picture:  {}".format(picture))
+    os.rename(os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, picture), os.path.join(app.config['UPLOAD_FOLDER'] , current_user.username, 'profile_pic', picture))
+    # print("picture:  {}".format(picture))
     flash('Your Profile picture has been updated')
     return redirect(url_for('user', username=current_user.username))
 
