@@ -62,21 +62,14 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-
-    if not user.path_pic:
-        fullfilename = ''
-    else :
-        fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + username))
-        for file in fullfilename:
-            if file == 'profile_pic':
-                fullfilename.remove(file)
+    fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + username))
+    for file in fullfilename:
+        if file == 'profile_pic':
+            fullfilename.remove(file)
 
     profile_pic = user.profile_pic()
-    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = user.path_pic, profile_pic=profile_pic)
-
-
-
-
+    path_pic = app.config['PATH_IMAGE'] + username
+    return render_template('user.html', title='Profile', user=user, user_image = fullfilename, path_pic = path_pic, profile_pic=profile_pic)
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -109,7 +102,6 @@ def allowed_file(filename):
 
 @app.route('/upload/', methods=['GET', 'POST'])
 def upload():
-    # form = UploadForm
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -122,13 +114,8 @@ def upload():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            # begening changes
-            # print("here is path_pic before the function: {}".format(current_user.path_pic))
-            if not current_user.path_pic:
+            if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
                 os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
-                current_user.path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
-                db.session.commit()
-
             if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
@@ -137,41 +124,22 @@ def upload():
                 flash('You can only have 5 pictures, please delete one of your other picture')
                 return redirect(url_for('user', username=current_user.username))
 
-            # # before changes
-            # if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
-            #     os.mkdir(app.config['UPLOAD_FOLDER'] + current_user.username)
-            # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username)]) <= 5):
-            # # if (len([name for name in os.listdir(app.config['UPLOAD_FOLDER'] + current_user.username) if os.path.isfile(name)]) <= 5):
-            #     filename = secure_filename(file.filename)
-            #     file.save(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username, filename))
-            #     return redirect(url_for('uploaded_file', filename=filename))
-            # else:
-            #     flash('You can only have 5 pictures, please delete one of your other picture')
-            #     return redirect(url_for('user', username=current_user.username))
-
     user = User.query.filter_by(username=current_user.username).first_or_404()
-    # changes 2
-    if not current_user.path_pic:
+    if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
         fullfilename = ''
+        path_pic = ''
     else :
         fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = current_user.path_pic)
-
-    # # beforechanges 2
-    # if not os.path.exists(app.config['UPLOAD_FOLDER'] + current_user.username):
-    #     fullfilename = ''
-    #     path_pic = ''
-    # else :
-    #     fullfilename = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + current_user.username))
-    #     path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
-    # return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
-    # # return render_template('upload.html', title='Upload', form=form)
+        for file in fullfilename:
+            if file == 'profile_pic':
+                fullfilename.remove(file)
+        path_pic = os.path.join(app.config['PATH_IMAGE'] + current_user.username)
+    return render_template('upload.html', title='Upload', user=user, user_image = fullfilename, path_pic = path_pic)
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     flash('Your Picture has been uploaded successfully')
     return redirect(url_for('user', username=current_user.username))
-    # return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
@@ -216,7 +184,7 @@ def explore():
 def likes_page():
     profiles_you_like = current_user.your_likes()
     profiles_who_liked_you = current_user.likes_you()
-    # print("====>  ***profiles_who_liked_you {}".format(profiles_who_liked_you))
+    print("====>  ***profiles_you_like {}".format(profiles_you_like))
     return render_template('likes_page.html', title='Your Likes', profiles_you_like=profiles_you_like, profiles_who_liked_you=profiles_who_liked_you)
 
 @app.route('/matches/')
@@ -224,6 +192,7 @@ def likes_page():
 def matches_page():
     # to change for the function who doesn't exist yet
     profiles_matches = current_user.your_likes()
+    print("====>  ***profiles_matches {}".format(profiles_matches))
     return render_template('matches_page.html', title='Matches', profiles_matches=profiles_matches)
 
 @app.route('/like/<username>')

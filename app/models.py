@@ -23,7 +23,6 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-    path_pic = db.Column(db.String(120), index=True, default=None)
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
@@ -72,7 +71,7 @@ class User(UserMixin, db.Model):
 
 
     def __repr__(self):
-        return '<User username:{}, firstname:{}, email:{}, path_pic:{}>'.format(self.username, self.firstname, self.email, self.path_pic)
+        return '<User username:{}, firstname:{}, email:{}>'.format(self.username, self.firstname, self.email)
     
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
