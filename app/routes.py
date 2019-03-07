@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 from flask_simple_geoip import SimpleGeoIP
-
+# from flask_socketio import SocketIO
 
 
 @app.before_request
@@ -245,3 +245,21 @@ def test():
     print(resultOfApi)
     return jsonify(data=geoip_data)
     # return render_template('test.html', title='Test', resultOfApi=resultOfApi)
+
+# socketio = SocketIO(app)
+
+# @app.route('/chat')
+# @login_required
+# def sessions():
+#     return render_template('chat.html')
+
+# def messageReceived(methods=['GET', 'POST']):
+#     print('message was received!!!')
+
+# @socketio.on('my event')
+# def handle_my_custom_event(json, methods=['GET', 'POST']):
+#     print('received my event: ' + str(json))
+#     socketio.emit('my response', json, callback=messageReceived)
+
+# if __name__ == '__main__':
+    

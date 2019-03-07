@@ -10,6 +10,7 @@ from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_simple_geoip import SimpleGeoIP
+# from flask_socketio import SocketIO
 
 
 app = Flask(__name__)
@@ -22,6 +23,8 @@ bootstrap = Bootstrap(app)
 mail = Mail(app)
 moment = Moment(app)
 simple_geoip = SimpleGeoIP(app)
+# socketio = SocketIO(app)
+# socketio.run(app, debug=True)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:
