@@ -1,5 +1,5 @@
 from app import app, db
-from flask import send_from_directory, render_template, url_for, flash, redirect, request
+from flask import send_from_directory, render_template, url_for, flash, redirect, request, jsonify
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
@@ -8,6 +8,8 @@ from werkzeug.urls import url_parse
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+from flask_simple_geoip import SimpleGeoIP
+# from flask_socketio import SocketIO
 
 
 @app.before_request
@@ -94,7 +96,8 @@ def edit_profile():
         form.age.data = current_user.age
         form.email.data = current_user.email
         form.sexpref.data = current_user.sexpref
-    return render_template('edit_profile.html', title='Edit Profile', form=form)
+    user_image = current_user.get_img_paths()
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user_image=user_image)
 
 
 def allowed_file(filename):
@@ -102,6 +105,7 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 @app.route('/upload/', methods=['GET', 'POST'])
+@login_required
 def upload():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -133,6 +137,7 @@ def upload():
     return render_template('upload.html', title='Upload', user=user, user_image=user_image)
 
 @app.route('/uploads/<filename>')
+@login_required
 def uploaded_file(filename):
     flash('Your Picture has been uploaded successfully')
     return redirect(url_for('user', username=current_user.username))
@@ -170,7 +175,7 @@ def reset_password(token):
 def explore():
     # A changer pour le mettre dynamiquement: all the user the current_user doen't like and didn't block
     profile_list = User.query.all()
-    print(profile_list)
+    # print(profile_list)
     # fin du changement
 
     return render_template('explore.html', title='Explore', profile_list=profile_list)
@@ -180,7 +185,7 @@ def explore():
 def likes_page():
     profiles_you_like = current_user.your_likes()
     profiles_who_liked_you = current_user.likes_you()
-    print("====>  ***profiles_you_like {}".format(profiles_you_like))
+    # print("====>  ***profiles_you_like {}".format(profiles_you_like))
     return render_template('likes_page.html', title='Your Likes', profiles_you_like=profiles_you_like, profiles_who_liked_you=profiles_who_liked_you)
 
 @app.route('/matches/')
@@ -188,7 +193,7 @@ def likes_page():
 def matches_page():
     # to change for the function who doesn't exist yet
     profiles_matches = current_user.your_likes()
-    print("====>  ***profiles_matches {}".format(profiles_matches))
+    # print("====>  ***profiles_matches {}".format(profiles_matches))
     return render_template('matches_page.html', title='Matches', profiles_matches=profiles_matches)
 
 @app.route('/like/<username>')
@@ -222,6 +227,7 @@ def unlike(username):
     return redirect(url_for('user', username=username))
 
 @app.route('/swap_prof_pic/')
+@login_required
 def swap_prof_pic():
     picture = request.args.get('type')
     print(os.getcwd())
@@ -237,3 +243,31 @@ def swap_prof_pic():
     return redirect(url_for('user', username=current_user.username))
 
  
+@app.route('/test/')
+def test():
+    # Retrieve geoip data for the given requester
+    simple_geoip = SimpleGeoIP(app)
+    geoip_data = simple_geoip.get_geoip_data()
+    # print jsonify(data=geoip_data)
+    resultOfApi = jsonify(data=geoip_data)
+    print("------> resultOfApi: ", geoip_data)
+    print(resultOfApi)
+    return jsonify(data=geoip_data)
+    # return render_template('test.html', title='Test', resultOfApi=resultOfApi)
+
+# socketio = SocketIO(app)
+
+# @app.route('/chat')
+# @login_required
+# def sessions():
+#     return render_template('chat.html')
+
+# def messageReceived(methods=['GET', 'POST']):
+#     print('message was received!!!')
+
+# @socketio.on('my event')
+# def handle_my_custom_event(json, methods=['GET', 'POST']):
+#     print('received my event: ' + str(json))
+#     socketio.emit('my response', json, callback=messageReceived)
+
+# if __name__ == '__main__':
