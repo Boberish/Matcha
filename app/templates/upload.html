@@ -13,7 +13,7 @@
 
     <p>Your other pictures (click on one to change it to your profile picture)</p>
     {% for image in user_image: %}
-        <a href="{{ url_for('swap_prof_pic', type=image) }}"><img src="{{ image }}" alt="User picture" style="width:5%"></a>
+        <a href="{{ url_for('main.swap_prof_pic', type=image) }}"><img src="{{ image }}" alt="User picture" style="width:5%"></a>
     {% endfor %}
 
     <br>

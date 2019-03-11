@@ -2,11 +2,11 @@ from app import db, login
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from flask import url_for
+from flask import url_for, current_app
 from flask_login import current_user
 from time import time
 import jwt
-from app import app
+# from app import app
 import os
 
 likes = db.Table('likes',db.Column('likes_id', db.Integer, db.ForeignKey('user.id')), 
@@ -26,12 +26,9 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-<<<<<<< HEAD
     # localisation_lat = db.Column(db.Float, index=True)
     # localisation_long = db.Column(db.Float, index=True)
-=======
     fame = db.Column(db.Integer, index=True)
->>>>>>> keaton
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
@@ -83,8 +80,8 @@ class User(UserMixin, db.Model):
         return(path + pic[0])
     
     def get_user_img_paths(self):
-        filelist = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + self.username))
-        final = [app.config['PATH_IMAGE']  + self.username + '/' + file for file in filelist if file != "profile_pic"]
+        filelist = os.listdir(os.path.join(current_app.config['UPLOAD_FOLDER'] + self.username))
+        final = [current_app.config['PATH_IMAGE']  + self.username + '/' + file for file in filelist if file != "profile_pic"]
         return final
 
 
@@ -112,8 +109,8 @@ class User(UserMixin, db.Model):
             pass
 
     def get_img_paths(self):
-        image_name_list = os.listdir(os.path.join(app.config['UPLOAD_FOLDER'] + self.username))
-        path = os.path.join(app.config['PATH_IMAGE'] , self.username)
+        image_name_list = os.listdir(os.path.join(current_app.config['UPLOAD_FOLDER'] + self.username))
+        path = os.path.join(current_app.config['PATH_IMAGE'] , self.username)
 
         final = [path + '/' + img for img in image_name_list if img != 'profile_pic']
         return(final)
@@ -124,12 +121,12 @@ class User(UserMixin, db.Model):
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
-            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+            current_app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
             return

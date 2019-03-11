@@ -4,7 +4,7 @@
 {#<img src="{{ profile.profile_pic }}" alt="Beer" style="width:10%">#}
 
 {% if  profile.profile_pic()%}
-<a href="{{ url_for('user', username=profile.username) }}"><img src="{{ profile.profile_pic() }}" alt="User picture" style="width:10%"></a>
+<a href="{{ url_for('main.user', username=profile.username) }}"><img src="{{ profile.profile_pic() }}" alt="User picture" style="width:10%"></a>
 {% endif %}
 
 <p>{{profile.username}}</p>
