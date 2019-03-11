@@ -11,8 +11,8 @@
             <br>
             <br>
 
-            {% for image in user_image: %}
-                <img src="{{ path_pic + '/' + image }}" alt="User Pictures" style="width:10%">
+            {% for image in user_pics: %}
+                <img src="{{ image }}" alt="User Pictures" style="width:10%">
             {% endfor %}
 
             <td>
@@ -36,6 +36,16 @@
                     <p><a href="{{ url_for('unlike', username=user.username) }}">Unlike</a></p>
                 {% endif %}
     <hr>
+                {% if current_user == user %}
+                <h1> Recently visited profiles</h1>
+                {% for profile in history|reverse %}
+                {% include '_sumup.html' %}
+                {% endfor %}
+                <h1> Recently viewed your profile</h1>
+                {% for profile in looked_at_you|reverse %}
+                {% include '_sumup.html' %}
+                {% endfor %}
+                {% endif %}
 
                 {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
             </td>
