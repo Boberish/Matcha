@@ -175,6 +175,9 @@ def reset_password(token):
 def explore():
     # A changer pour le mettre dynamiquement: all the user the current_user doen't like and didn't block
     profile_list = User.query.all()
+    for profile in profile_list:
+        if profile == current_user:
+            profile_list.remove(profile)
     # print(profile_list)
     # fin du changement
 

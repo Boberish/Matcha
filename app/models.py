@@ -23,6 +23,8 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    # localisation_lat = db.Column(db.Float, index=True)
+    # localisation_long = db.Column(db.Float, index=True)
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
