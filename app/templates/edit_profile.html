@@ -6,9 +6,9 @@
     <img src={{current_user.profile_pic()}} alt="Profile Picture" style="width:10%">
     <p>To change your profile picture Click onthe one you like !</p>
     {% for image in user_image: %}
-        <a href="{{ url_for('swap_prof_pic', type=image) }}"><img src="{{ image }}" alt="User picture" style="width:5%"></a>
+        <a href="{{ url_for('main.swap_prof_pic', type=image) }}"><img src="{{ image }}" alt="User picture" style="width:5%"></a>
     {% endfor %}
-    <p><a href="{{ url_for('upload') }}">Add more picture ? 📸 </a></p>
+    <p><a href="{{ url_for('main.upload') }}">Add more picture ? 📸 </a></p>
 
 
     <div class="row">
@@ -17,5 +17,5 @@
         </div>
     </div>
     <br>
-    <p>Change Your Password? <a href="{{ url_for('reset_password_request') }}">Click to Reset It</a></p>
+    <p>Change Your Password? <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a></p>
 {% endblock %}
