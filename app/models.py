@@ -8,12 +8,19 @@ from time import time
 import jwt
 from app import app
 import os
+from sqlalchemy.ext.associationproxy import association_proxy
 
 likes = db.Table('likes',db.Column('likes_id', db.Integer, db.ForeignKey('user.id')), 
     db.Column('liked_id', db.Integer, db.ForeignKey('user.id')) )
 
 looks = db.Table('looks',db.Column('looks_id', db.Integer, db.ForeignKey('user.id')), 
     db.Column('looked_id', db.Integer, db.ForeignKey('user.id')) )
+
+user_tags_table = db.Table('user_tags' , db.Model.metadata, db.Column('user_id',db.Integer, db.ForeignKey("user.id"), primary_key=True),
+    db.Column('tag_id', db.Integer, db.ForeignKey("tags.id"), primary_key=True))
+
+
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,12 +33,9 @@ class User(UserMixin, db.Model):
     fame = db.Column(db.Integer, index=True)
     bio = db.Column(db.String(256), index=True)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
-<<<<<<< HEAD
     # localisation_lat = db.Column(db.Float, index=True)
     # localisation_long = db.Column(db.Float, index=True)
-=======
     fame = db.Column(db.Integer, index=True)
->>>>>>> keaton
     liked = db.relationship(
         'User', secondary=likes,
         primaryjoin=(likes.c.likes_id == id),
@@ -43,6 +47,16 @@ class User(UserMixin, db.Model):
         secondaryjoin=(looks.c.looked_id == id),
         backref=db.backref('looks', lazy='dynamic'),lazy='dynamic'
     )
+
+    ts = db.relationship("Tags", secondary=lambda: user_tags_table)
+    tags = association_proxy('ts', 'tags')
+
+    def add_tag(self,tag):
+        self.tags.append(tag)
+        db.session.commit()
+    
+    def get_tags(self):
+        return (self.tags)
 
     def add_look(self, user):
         if self.username != user.username:
@@ -136,7 +150,12 @@ class User(UserMixin, db.Model):
         return User.query.get(id)
 
 
+class Tags(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tags = db.Column('tags', db.String(64))
 
+    def __init__(self, tags):
+        self.tags = tags
 
 @login.user_loader
 def load_user(id):
