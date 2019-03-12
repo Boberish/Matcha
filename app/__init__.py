@@ -12,7 +12,6 @@ from flask_moment import Moment
 from flask_simple_geoip import SimpleGeoIP
 # from flask_socketio import SocketIO
 from elasticsearch import Elasticsearch
-from app import app
 
 db = SQLAlchemy()
 migrate = Migrate()
