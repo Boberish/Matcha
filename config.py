@@ -17,7 +17,7 @@ class Config(object):
     PATH_IMAGE = '/static/images/'
     ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
     GEOIPIFY_API_KEY = "at_Lql3BVDrqYTBjrtl0eEjFhIhLw8aW"
-    # ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
+    ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')
 
 
 # psw=Philou1234

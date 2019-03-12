@@ -1,4 +1,4 @@
-from app import app, db
+from app import current_app
 from app.models import User, Tags
 
 @app.shell_context_processor

@@ -47,7 +47,7 @@ class User(UserMixin, db.Model):
         secondaryjoin=(looks.c.looked_id == id),
         backref=db.backref('looks', lazy='dynamic'),lazy='dynamic'
     )
-
+    __searchable__ = ['username']
     ts = db.relationship("Tags", secondary=lambda: user_tags_table)
     tags = association_proxy('ts', 'tags')
 
@@ -153,7 +153,7 @@ class User(UserMixin, db.Model):
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tags = db.Column('tags', db.String(64))
-
+    
     def __init__(self, tags):
         self.tags = tags
 

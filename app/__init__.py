@@ -11,7 +11,8 @@ from flask_mail import Mail
 from flask_moment import Moment
 from flask_simple_geoip import SimpleGeoIP
 # from flask_socketio import SocketIO
-
+from elasticsearch import Elasticsearch
+from app import app
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -36,7 +37,9 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
     simple_geoip.init_app(app)
-
+    app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \
+        if app.config['ELASTICSEARCH_URL'] else None
+        
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
