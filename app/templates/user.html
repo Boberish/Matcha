@@ -35,22 +35,35 @@
                 {% else %}
                     <p><a href="{{ url_for('main.unlike', username=user.username) }}">Unlike</a></p>
                 {% endif %}
-    <hr>
-                {% if current_user == user %}
-                <h1> Recently visited profiles</h1>
-                {% for profile in history|reverse %}
-                {% include '_sumup.html' %}
-                {% endfor %}
-                <h1> Recently viewed your profile</h1>
-                {% for profile in looked_at_you|reverse %}
-                {% include '_sumup.html' %}
-                {% endfor %}
-                {% endif %}
-
-                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+               
             </td>
         </tr>
     </table>
     <hr>
+    {% if current_user == user %}
+    <section id="team" class="pb-5">
+            <div class="container">
+                <h5 class="section-title h1"> Recently visited profiles🚀</h5>
+                <div class="row">
+                    {% for profile in history|reverse %}
+                        {% include '_sumup.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+    </section>
+    <section id="team" class="pb-5">
+            <div class="container">
+                <h5 class="section-title h1"> RRecently viewed your profile</h5>
+                <div class="row">
+                    {% for profile in looked_at_you|reverse %}
+                        {% include '_sumup.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+    </section>
+    {% else %}
+        {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
+    {% endif %}
+
 
 {% endblock %}

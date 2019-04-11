@@ -1,16 +1,58 @@
 
+<!-- Team member -->
+<div class="col-xs-12 col-sm-6 col-md-4">
+    <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
+    <div class="mainflip">
+            <div class="frontside">
+            <div class="card">
+                    <div class="card-body text-center" >
+                    {% if  profile.profile_pic() %}
+                            <p></a><img class=" img-fluid" src="{{ profile.profile_pic() }}" alt="User picture"></p>
+                    {% endif %}
+                    <h4 class="card-title">{{ profile.username }}</h4>
+                    {% if profile.firstname %}<h5 class="card-title">{{profile.firstname}}</h5>{% endif %}          
+                    {% if profile.age %} <p class="card-text"><small class="text-muted">Age : {{profile.age}}</small></p>{% endif %}
+                    {% if profile.sexpref %}<p class="card-text"><small class="text-muted">Sexe Preference : {{profile.sexpref}}</small></p>{% endif %}
+                    <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a>
+                    </div>
+            </div>
+            </div>
+            <div class="backside">
+            <div class="card">
+                    <!-- all the back of the card == link -->
+                            <!-- <a href="{{ url_for('main.user', username=profile.username) }}"> -->
 
-{#<img src="{{ path_pic + '/' + image }}" alt="Beer" style="width:10%">#}
-{#<img src="{{ profile.profile_pic }}" alt="Beer" style="width:10%">#}
-
-{% if  profile.profile_pic()%}
-<a href="{{ url_for('main.user', username=profile.username) }}"><img src="{{ profile.profile_pic() }}" alt="User picture" style="width:10%"></a>
-{% endif %}
-
-<p>{{profile.username}}</p>
-{% if profile.sexpref %} <p>Sexe Preference : {{profile.sexpref}}</p>{% endif %}
-{% if profile.age %} <p>Age : {{profile.age}}</p>{% endif %}
-{% if profile.bio %} <p>About me: {{profile.bio}}</p>{% endif %}
-
-<hr>
-<br>
+                    <div class="card-body text-center mt-4">
+                    <h4 class="card-title">About me :</h4>
+                    {% if profile.bio %} <p class="card-text">About me: {{profile.bio}}</p>{% endif %}
+                    {% if profile.last_seen %}<p class="card-text"><small class="text-muted">Last connection on: {{ profile.last_seen }}</small></p>{% endif %}
+                    <a href="{{ url_for('main.user', username=profile.username) }}">Come visit my profile ♡</a>
+                    
+                    <ul class="list-inline">
+                            <li class="list-inline-item">
+                            <a class="social-icon text-xs-center" target="_blank" href="#">
+                                    <i class="fa fa-facebook"></i>
+                            </a>
+                            </li>
+                            <li class="list-inline-item">
+                            <a class="social-icon text-xs-center" target="_blank" href="#">
+                                    <i class="fa fa-twitter"></i>
+                            </a>
+                            </li>
+                            <li class="list-inline-item">
+                            <a class="social-icon text-xs-center" target="_blank" href="#">
+                                    <i class="fa fa-skype"></i>
+                            </a>
+                            </li>
+                            <li class="list-inline-item">
+                            <a class="social-icon text-xs-center" target="_blank" href="#">
+                                    <i class="fa fa-google"></i>
+                            </a>
+                            </li>
+                    </ul>
+                    </div>
+            </div>
+            </div>
+    </div>
+    </div>
+</div>

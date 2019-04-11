@@ -7,7 +7,7 @@ from app.auth.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm
 from app.models import User
 from app.auth.email import send_password_reset_email
 
-@bp.route('/login', methods=['GET', 'POST'])
+@bp.route('/login/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -24,12 +24,12 @@ def login():
         return redirect(next_page)
     return render_template('auth/login.html', title=('Login Page'), form=form)
 
-@bp.route('/logout')
+@bp.route('/logout/')
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
-@bp.route('/register', methods=['GET', 'POST'])
+@bp.route('/register/', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -41,11 +41,13 @@ def register():
         db.session.commit()
         user.init_profile_pic()
         flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('auth.login'))
+        login_user(user, remember=True)
+        return redirect(url_for('main.user', username=form.username.data))
+        # return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title=('Register'), form=form)
 
 
-@bp.route('/reset_password_request', methods=['GET', 'POST'])
+@bp.route('/reset_password_request/', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
@@ -60,7 +62,7 @@ def reset_password_request():
                            title=('Reset Password'), form=form)
 
 
-@bp.route('/reset_password/<token>', methods=['GET', 'POST'])
+@bp.route('/reset_password/<token>/', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))

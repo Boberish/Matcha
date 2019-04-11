@@ -20,7 +20,7 @@ def before_request():
 def index():
     return render_template('index.html', title='Home')
 
-@bp.route('/explore')
+@bp.route('/explore/')
 @login_required
 def explore():
     # A changer pour le mettre dynamiquement: all the user the current_user doen't like and didn't block
@@ -33,7 +33,7 @@ def explore():
 
     return render_template('explore.html', title='Explore', profile_list=profile_list)
 
-@bp.route('/user/<username>')
+@bp.route('/user/<username>/')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
@@ -42,10 +42,13 @@ def user(username):
     profile_pic = user.profile_pic()
     history = current_user.get_your_looks()
     looked_at_you = current_user.get_looked_at_you()
-    return render_template('user.html', title='Profile',looked_at_you=looked_at_you, user=user, user_pics = user_pics, profile_pic=profile_pic, history=history)
+    # try
+    profile_list = User.query.all()
+
+    return render_template('user.html', title='Profile',looked_at_you=looked_at_you, user=user, user_pics = user_pics, profile_pic=profile_pic, history=history, profile_list=profile_list)
 
 
-@bp.route('/edit_profile', methods=['GET', 'POST'])
+@bp.route('/edit_profile/', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username, current_user.email)
@@ -105,7 +108,7 @@ def upload():
     user_image = current_user.get_img_paths()
     return render_template('upload.html', title='Upload', user=user, user_image=user_image)
 
-@bp.route('/uploads/<filename>')
+@bp.route('/uploads/<filename>/')
 @login_required
 def uploaded_file(filename):
     flash('Your Picture has been uploaded successfully')
@@ -127,7 +130,7 @@ def matches_page():
     # print("====>  ***profiles_matches {}".format(profiles_matches))
     return render_template('matches_page.html', title='Matches', profiles_matches=profiles_matches)
 
-@bp.route('/like/<username>')
+@bp.route('/like/<username>/')
 @login_required
 def like(username):
     user = User.query.filter_by(username=username).first()
@@ -142,7 +145,7 @@ def like(username):
     flash('You now like {}!'.format(username))
     return redirect(url_for('main.user', username=username))
 
-@bp.route('/unlike/<username>')
+@bp.route('/unlike/<username>/')
 @login_required
 def unlike(username):
     user = User.query.filter_by(username=username).first()

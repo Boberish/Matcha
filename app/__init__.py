@@ -6,7 +6,7 @@ from flask_login import LoginManager
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
-from flask_bootstrap import Bootstrap
+# from flask_bootstrap import Bootstrap
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_simple_geoip import SimpleGeoIP
@@ -17,7 +17,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 login = LoginManager()
 login.login_view = 'auth.login'
-bootstrap = Bootstrap()
+# bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 simple_geoip = SimpleGeoIP()
@@ -33,7 +33,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     mail.init_app(app)
-    bootstrap.init_app(app)
+    # bootstrap.init_app(app)
     moment.init_app(app)
     simple_geoip.init_app(app)
     app.elasticsearch = Elasticsearch([app.config['ELASTICSEARCH_URL']]) \

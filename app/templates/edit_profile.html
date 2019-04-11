@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
+{% from "_render_field.html" import render_field, render_radio_fields %}
+
 
 {% block app_content %}
     <h1>Edit Your Profile</h1>
@@ -11,11 +12,26 @@
     <p><a href="{{ url_for('main.upload') }}">Add more picture ? 📸 </a></p>
 
 
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
+
+
+    <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+    
+            {{ render_field(form.username, placeholder=form.username.label.text) }}
+            {{ render_field(form.firstname, placeholder=form.firstname.label.text) }}
+            {{ render_field(form.bio, placeholder=form.bio.label.text) }}
+            {{ render_field(form.age, placeholder=form.age.label.text) }}
+            {{ render_radio_fields(form.sexpref) }}
+            {{ render_field(form.email, placeholder=form.email.label.text) }}
+    
+            <p>{{ form.submit(class_="btn btn-primary") }}</p>
+        </form>
+
+
+
+
+
+
     <br>
     <p>Change Your Password? <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a></p>
 {% endblock %}

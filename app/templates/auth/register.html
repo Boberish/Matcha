@@ -1,54 +1,20 @@
 {% extends "base.html" %}
-{% import 'bootstrap/wtf.html' as wtf %}
-
-{% block app_content %}
-    <h1>Register</h1>
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
-    </div>
-{% endblock %}
+{% from "_render_field.html" import render_field %}
 
 
-<!-- {#{% extends "base.html" %}
+    {% block app_content %}
+    <h1>Register </h1>
 
-{% block app_content %}
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
 
-<h1>Sign Up !!</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.username.label }}<br>
-        {{ form.username(size=32) }}<br>
-        {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(size=64) }}<br>
-        {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password.label }}<br>
-        {{ form.password(size=32) }}<br>
-        {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
-        {{ form.password2.label }}<br>
-        {{ form.password2(size=32) }}<br>
-        {% for error in form.password2.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
+        {{ render_field(form.username, placeholder=form.username.label.text) }}
+        {{ render_field(form.email, placeholder=form.email.label.text) }}
+        {{ render_field(form.password, placeholder=form.password.label.text) }}
+        {{ render_field(form.password2, placeholder=form.password2.label.text) }}
 
-</form>
+        <p>{{ form.submit(class_="btn btn-primary") }}</p>
+    </form>
 
 {% endblock %}
-    #} -->
+

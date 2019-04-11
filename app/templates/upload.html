@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 
+
 {% block app_content %}
 
 
 <form method=post enctype=multipart/form-data>
-{% if  current_user.profile_pic()%}
-<p>Profile Picture: </p>
-<img src={{current_user.profile_pic()}} alt="Profile Picture" style="width:20%">
-<br>
-<br>
-{% endif %}
+    {% if  current_user.profile_pic()%}
+        <p>Profile Picture: </p>
+        <img src={{current_user.profile_pic()}} alt="Profile Picture" style="width:20%">
+        <br>
+        <br>
+    {% endif %}
 
     <p>Your other pictures (click on one to change it to your profile picture)</p>
     {% for image in user_image: %}

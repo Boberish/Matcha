@@ -1,13 +1,26 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <h1>Welcome on the Explore page !</h1>
-    <h2>Find your love Here 👇</h2>
+
+   {# <!-- <div class="card-deck" >
+        {% for profile in profile_list %}
+            {% include '_sumup.html' %}
+        {% endfor %}
+    </div> -->#}
+
+<section id="team" class="pb-5">
+                <div class="container">
+                    <h5 class="section-title h1">Your love !</h5>
+                    <div class="row">
+                {% for profile in profile_list %}
+                    {% include '_sumup.html' %}
+                {% endfor %}
+        </div>
+    </div>
+</section>
+
     <hr>
 
-    {% for profile in profile_list %}
-        {% include '_sumup.html' %}
-    {% endfor %}
 
-    <hr>
+    
 {% endblock %}

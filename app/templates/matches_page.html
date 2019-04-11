@@ -2,14 +2,17 @@
 
 {% block app_content %}
     <h1>Matches !</h1>
-    <h2>Start Here the love story 🚀</h2>
-    <hr>
 
 
-    {% for profile in profiles_matches %}
-        {% include '_sumup.html' %}
-    {% endfor %}
-
-    <hr>
+    <section id="team" class="pb-5">
+            <div class="container">
+                <h5 class="section-title h1">Start Here the love story 🚀</h5>
+                <div class="row">
+                    {% for profile in profiles_matches %}
+                        {% include '_sumup.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+    </section>
 
 {% endblock %}
