@@ -9,7 +9,6 @@ dominate==2.3.5
 elasticsearch==6.3.1
 Flask==1.0.2
 Flask-Bootstrap==3.3.7.1
--e git+https://github.com/rochacbruno/Flask-GoogleMaps@8b1c7c50c04219aac3d58ab5af569933e55ad464#egg=Flask_GoogleMaps
 Flask-Login==0.4.1
 Flask-Mail==0.9.1
 Flask-Migrate==2.3.1
